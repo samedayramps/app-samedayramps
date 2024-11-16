@@ -1,0 +1,84 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Customer Info
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+
+  // Ramp Details
+  knowRampLength     Boolean
+  rampLength         String?
+  knowRentalDuration Boolean
+  rentalDuration     String?
+  installTimeframe   String
+  mobilityAids       String[] // Stored as JSON array
+  otherAid          String?
+
+  // Address and Other Details
+  installAddress String
+  source         String
+  status        LeadStatus @default(NEW)
+  notes         String     @default("")
+  quotes      Quote[]
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  CONVERTED
+  LOST
+}
+
+model Quote {
+  id          String   @id @default(cuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id])
+  rampLength  Float
+  platforms   Int      @default(0)
+  distance    Float    // Delivery distance in miles
+  price       Float
+  status      String   @default("DRAFT") // DRAFT, SENT, ACCEPTED, DECLINED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sentAt      DateTime?
+  expiresAt   DateTime?
+  notes       String?
+
+  @@index([leadId])
+}
+
+model BusinessSettings {
+  id                    Int      @id @default(1)
+  warehouseAddress      String   @default("6008 Windridge Ln, Flower Mound, TX 75028, USA")
+  baseDeliveryFee      Float    @default(50)
+  deliveryFeePerMile   Float    @default(4)
+  baseInstallFee       Float    @default(50)
+  installFeePerComponent Float   @default(50)
+  rentalRatePerFt      Float    @default(11)
+  updatedAt            DateTime @updatedAt @default(now())
+} 
