@@ -5,24 +5,22 @@ import { type Lead } from "@/types/lead";
 const recentLeads: Lead[] = [
   {
     id: "1",
-    customerInfo: {
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@email.com",
-      phone: "(555) 123-4567",
-    },
-    rampDetails: {
-      knowRampLength: true,
-      rampLength: "10",
-      knowRentalDuration: true,
-      rentalDuration: "30",
-      installTimeframe: "ASAP",
-      mobilityAids: ["wheelchair"],
-    },
+    firstName: "John",
+    lastName: "Doe",
+    email: "john.doe@email.com",
+    phone: "(555) 123-4567",
+    knowRampLength: true,
+    rampLength: "10",
+    knowRentalDuration: true,
+    rentalDuration: "30",
+    installTimeframe: "ASAP",
+    mobilityAids: ["wheelchair"],
+    otherAid: null,
     installAddress: "123 Main St, Anytown, USA",
     source: "Website Form",
-    status: "New",
-    date: new Date().toISOString(),
+    status: "NEW",
+    createdAt: new Date(),
+    updatedAt: new Date(),
     notes: "",
   },
   // ... more mock leads
@@ -36,16 +34,16 @@ export function RecentLeads() {
           <Avatar className="h-9 w-9">
             <AvatarImage src="/avatars/01.png" alt="Avatar" />
             <AvatarFallback>
-              {lead.customerInfo.firstName[0]}
-              {lead.customerInfo.lastName[0]}
+              {lead.firstName[0]}
+              {lead.lastName[0]}
             </AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
             <p className="text-sm font-medium leading-none">
-              {lead.customerInfo.firstName} {lead.customerInfo.lastName}
+              {lead.firstName} {lead.lastName}
             </p>
             <p className="text-sm text-muted-foreground">
-              {lead.customerInfo.email}
+              {lead.email}
             </p>
             <p className="text-xs text-muted-foreground">
               {lead.installAddress}

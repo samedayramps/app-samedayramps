@@ -73,4 +73,33 @@ export async function createQuote(prevState: State, formData: FormData) {
     console.error('Failed to create quote:', error);
     return { message: 'Failed to create quote' };
   }
+}
+
+export async function deleteQuote(id: string) {
+  try {
+    await prisma.quote.delete({
+      where: { id },
+    });
+
+    revalidatePath('/quotes');
+    return { message: 'Quote deleted successfully' };
+  } catch (error) {
+    console.error('Failed to delete quote:', error);
+    return { error: 'Failed to delete quote' };
+  }
+}
+
+export async function updateQuoteStatus(id: string, status: string) {
+  try {
+    await prisma.quote.update({
+      where: { id },
+      data: { status },
+    });
+
+    revalidatePath('/quotes');
+    return { message: 'Quote status updated successfully' };
+  } catch (error) {
+    console.error('Failed to update quote status:', error);
+    return { error: 'Failed to update quote status' };
+  }
 } 
